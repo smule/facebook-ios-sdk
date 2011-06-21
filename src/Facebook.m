@@ -82,6 +82,7 @@ static NSString* kSDKVersion = @"2";
 }
 
 /**
+ * --- Customized by smule - adds userData param
  * A private helper function for sending HTTP requests.
  *
  * @param url
@@ -97,7 +98,8 @@ static NSString* kSDKVersion = @"2";
 - (FBRequest*)openUrl:(NSString *)url
                params:(NSMutableDictionary *)params
            httpMethod:(NSString *)httpMethod
-             delegate:(id<FBRequestDelegate>)delegate {
+             delegate:(id<FBRequestDelegate>)delegate 
+             userData:(NSObject*) userData{
 
   [params setValue:@"json" forKey:@"format"];
   [params setValue:kSDK forKey:@"sdk"];
@@ -111,6 +113,7 @@ static NSString* kSDKVersion = @"2";
                                    httpMethod:httpMethod
                                      delegate:delegate
                                    requestURL:url] retain];
+  _request.userData = userData;
   [_request connect];
   return _request;
 }
@@ -210,10 +213,12 @@ static NSString* kSDKVersion = @"2";
 //public
 
 - (void)authorize:(NSArray *)permissions
-         delegate:(id<FBSessionDelegate>)delegate {
+         delegate:(id<FBSessionDelegate>)delegate
+  useSingleSignOn:(BOOL) useSingleSignOn{
   [self authorize:permissions
          delegate:delegate
-       localAppId:nil];
+       localAppId:nil
+  useSingleSignOn:useSingleSignOn];
 }
 
 /**
@@ -266,13 +271,14 @@ static NSString* kSDKVersion = @"2";
  */
 - (void)authorize:(NSArray *)permissions
          delegate:(id<FBSessionDelegate>)delegate
-       localAppId:(NSString *)localAppId {
+       localAppId:(NSString *)localAppId 
+  useSingleSignOn:(BOOL) useSingleSignOn{
   self.localAppId = localAppId;
   self.permissions = permissions;
 
   _sessionDelegate = delegate;
 
-  [self authorizeWithFBAppAuth:YES safariAuth:YES];
+  [self authorizeWithFBAppAuth:useSingleSignOn safariAuth:useSingleSignOn];
 }
 
 /**
@@ -375,7 +381,8 @@ static NSString* kSDKVersion = @"2";
   NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
   [self requestWithMethodName:@"auth.expireSession"
                     andParams:params andHttpMethod:@"GET"
-                  andDelegate:nil];
+                  andDelegate:nil
+                 andUserData:nil];
 
   [params release];
   [_accessToken release];
@@ -413,7 +420,8 @@ static NSString* kSDKVersion = @"2";
  *            Returns a pointer to the FBRequest object.
  */
 - (FBRequest*)requestWithParams:(NSMutableDictionary *)params
-                    andDelegate:(id <FBRequestDelegate>)delegate {
+                    andDelegate:(id <FBRequestDelegate>)delegate 
+                    andUserData:(NSObject*) userData{
   if ([params objectForKey:@"method"] == nil) {
     NSLog(@"API Method must be specified");
     return nil;
@@ -425,7 +433,8 @@ static NSString* kSDKVersion = @"2";
   return [self requestWithMethodName:methodName
                            andParams:params
                        andHttpMethod:@"GET"
-                         andDelegate:delegate];
+                         andDelegate:delegate
+                         andUserData:userData];
 }
 
 /**
@@ -453,12 +462,14 @@ static NSString* kSDKVersion = @"2";
 - (FBRequest*)requestWithMethodName:(NSString *)methodName
                     andParams:(NSMutableDictionary *)params
                 andHttpMethod:(NSString *)httpMethod
-                  andDelegate:(id <FBRequestDelegate>)delegate {
+                  andDelegate:(id <FBRequestDelegate>)delegate
+                  andUserData:(NSObject*) userData {
   NSString * fullURL = [kRestserverBaseURL stringByAppendingString:methodName];
   return [self openUrl:fullURL
                 params:params
             httpMethod:httpMethod
-              delegate:delegate];
+              delegate:delegate
+              userData:userData];
 }
 
 /**
@@ -477,12 +488,14 @@ static NSString* kSDKVersion = @"2";
  *            Returns a pointer to the FBRequest object.
  */
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
-                 andDelegate:(id <FBRequestDelegate>)delegate {
+                 andDelegate:(id <FBRequestDelegate>)delegate 
+				 andUserData:(NSObject*) userData{
 
   return [self requestWithGraphPath:graphPath
                           andParams:[NSMutableDictionary dictionary]
                       andHttpMethod:@"GET"
-                        andDelegate:delegate];
+                        andDelegate:delegate
+                        andUserData:userData];
 }
 
 /**
@@ -509,12 +522,13 @@ static NSString* kSDKVersion = @"2";
  */
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
                    andParams:(NSMutableDictionary *)params
-                 andDelegate:(id <FBRequestDelegate>)delegate {
-
+                 andDelegate:(id <FBRequestDelegate>)delegate
+				 andUserData:(NSObject*) userData {
   return [self requestWithGraphPath:graphPath
                           andParams:params
                       andHttpMethod:@"GET"
-                        andDelegate:delegate];
+                        andDelegate:delegate
+                        andUserData:userData];
 }
 
 /**
@@ -549,13 +563,15 @@ static NSString* kSDKVersion = @"2";
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
                    andParams:(NSMutableDictionary *)params
                andHttpMethod:(NSString *)httpMethod
-                 andDelegate:(id <FBRequestDelegate>)delegate {
+                 andDelegate:(id <FBRequestDelegate>)delegate 
+			     andUserData:(NSObject*) userData{
 
   NSString * fullURL = [kGraphBaseURL stringByAppendingString:graphPath];
   return [self openUrl:fullURL
                 params:params
             httpMethod:httpMethod
-              delegate:delegate];
+              delegate:delegate
+			  userData:userData];
 }
 
 /**

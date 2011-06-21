@@ -29,6 +29,7 @@
   NSMutableDictionary*  _params;
   NSURLConnection*      _connection;
   NSMutableData*        _responseText;
+  NSObject*             _userData;
 }
 
 
@@ -53,7 +54,7 @@
 @property(nonatomic,retain) NSMutableDictionary* params;
 @property(nonatomic,assign) NSURLConnection*  connection;
 @property(nonatomic,assign) NSMutableData* responseText;
-
+@property(nonatomic,retain) NSObject* userData;
 
 + (NSString*)serializeURL:(NSString *)baseUrl
                    params:(NSDictionary *)params;

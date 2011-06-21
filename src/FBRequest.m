@@ -35,7 +35,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
             httpMethod = _httpMethod,
             params = _params,
             connection = _connection,
-            responseText = _responseText;
+            responseText = _responseText,
+			userData = _userData;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // class public

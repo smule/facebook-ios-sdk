@@ -45,35 +45,44 @@
 - (id)initWithAppId:(NSString *)app_id;
 
 - (void)authorize:(NSArray *)permissions
-         delegate:(id<FBSessionDelegate>)delegate;
+         delegate:(id<FBSessionDelegate>)delegate
+  useSingleSignOn:(BOOL) useSingleSignOn;
 
 - (void)authorize:(NSArray *)permissions
          delegate:(id<FBSessionDelegate>)delegate
-       localAppId:(NSString *)localAppId;
+       localAppId:(NSString *)localAppId
+  useSingleSignOn:(BOOL) useSingleSignOn;
 
 - (BOOL)handleOpenURL:(NSURL *)url;
 
 - (void)logout:(id<FBSessionDelegate>)delegate;
 
+// ACL - changed so that we pass in a userData param to distinguish between 
+// requests
 - (FBRequest*)requestWithParams:(NSMutableDictionary *)params
-                    andDelegate:(id <FBRequestDelegate>)delegate;
+					andDelegate:(id <FBRequestDelegate>)delegate
+					andUserData:(NSObject*) userData;
 
 - (FBRequest*)requestWithMethodName:(NSString *)methodName
-                          andParams:(NSMutableDictionary *)params
-                      andHttpMethod:(NSString *)httpMethod
-                        andDelegate:(id <FBRequestDelegate>)delegate;
+                    andParams:(NSMutableDictionary *)params
+					andHttpMethod:(NSString *)httpMethod
+					andDelegate:(id <FBRequestDelegate>)delegate
+					andUserData:(NSObject*) userData;
 
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
-                       andDelegate:(id <FBRequestDelegate>)delegate;
+					andDelegate:(id <FBRequestDelegate>)delegate
+					andUserData:(NSObject*) userData;
 
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
-                         andParams:(NSMutableDictionary *)params
-                       andDelegate:(id <FBRequestDelegate>)delegate;
+					andParams:(NSMutableDictionary *)params
+					andDelegate:(id <FBRequestDelegate>)delegate
+					andUserData:(NSObject*) userData;
 
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
-                         andParams:(NSMutableDictionary *)params
-                     andHttpMethod:(NSString *)httpMethod
-                       andDelegate:(id <FBRequestDelegate>)delegate;
+					andParams:(NSMutableDictionary *)params
+					andHttpMethod:(NSString *)httpMethod
+					andDelegate:(id <FBRequestDelegate>)delegate
+					andUserData:(NSObject*) userData;
 
 - (void)dialog:(NSString *)action
    andDelegate:(id<FBDialogDelegate>)delegate;
