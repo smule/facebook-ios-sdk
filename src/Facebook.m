@@ -141,6 +141,9 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
     // this is the one case where the delegate is this object
     _requestExtendingAccessToken.delegate = nil;
+    
+    [self.tokenCaching removeObserver:self forKeyPath:FBaccessTokenPropertyName];
+    [self.tokenCaching removeObserver:self forKeyPath:FBexpirationDatePropertyName];
 
     [_session release];
     [_tokenCaching release];
